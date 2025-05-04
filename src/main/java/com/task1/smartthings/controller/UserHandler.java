@@ -1,6 +1,7 @@
 package com.task1.smartthings.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,13 +39,12 @@ public class UserHandler implements Handler {
     });
     }
     public void bindDeviceUser(Context ctx) {
-        ctx.parse(String.class).then(user -> {
+       
             String userIdParam = ctx.getRequest().getQueryParams().get("userId");
             String deviceIdParam = ctx.getRequest().getQueryParams().get("deviceId");
 
             if (userIdParam == null || deviceIdParam == null) {
-                ctx.getResponse().status(400).send("Missing 'userId' or 'deviceId' query parameter");
-                return;
+                throw new RuntimeException("Missing 'userId' or 'deviceId' query parameter");
             }
     
             int userId;
@@ -53,28 +53,28 @@ public class UserHandler implements Handler {
                 userId = Integer.parseInt(userIdParam);
                 deviceId = Integer.parseInt(deviceIdParam);
             } catch (NumberFormatException e) {
-                ctx.getResponse().status(400).send("Invalid 'userId' or 'deviceId' format");
-                return;
+                throw new RuntimeException("Invalid 'userId' or 'deviceId' format", e);
             }
             userService.bindDeviceUserService(userId, deviceId);
 
             ApiResponse successResponse = new ApiResponse("Success Bind User Device", true, null);
-            ctx.getResponse()
+            try {
+                ctx.getResponse()
                 .contentType("application/json")
                 .send(mapper.writeValueAsString(successResponse));
-            
-               
-           
-        });
-    }
+            } catch (Exception e) {
+                ctx.getResponse().status(500).send("Error serializing response");
+            }
+        
+        };
+    
     public void unbindDeviceUser(Context ctx) {
-        ctx.parse(String.class).then(user -> {
+        
             String userIdParam = ctx.getRequest().getQueryParams().get("userId");
             String deviceIdParam = ctx.getRequest().getQueryParams().get("deviceId");
 
             if (userIdParam == null || deviceIdParam == null) {
-                ctx.getResponse().status(400).send("Missing 'userId' or 'deviceId' query parameter");
-                return;
+                throw new RuntimeException("Missing 'userId' or 'deviceId' query parameter");
             }
     
             int userId;
@@ -83,25 +83,27 @@ public class UserHandler implements Handler {
                 userId = Integer.parseInt(userIdParam);
                 deviceId = Integer.parseInt(deviceIdParam);
             } catch (NumberFormatException e) {
-                ctx.getResponse().status(400).send("Invalid 'userId' or 'deviceId' format");
-                return;
+                throw new RuntimeException("Invalid 'userId' or 'deviceId' format", e);
             }
             userService.unbindDeviceUserService(userId, deviceId);
 
             ApiResponse successResponse = new ApiResponse("Success Unbind User Device", true, null);
-            ctx.getResponse()
+            try {
+                ctx.getResponse()
                 .contentType("application/json")
                 .send(mapper.writeValueAsString(successResponse));
-        });
-    }
+            } catch (Exception e) {
+                ctx.getResponse().status(500).send("Error serializing response");
+            }
+        };
+    
     public void changeDeviceValue(Context ctx) {
-        ctx.parse(String.class).then(user -> {
+        
             String userIdParam = ctx.getRequest().getQueryParams().get("userId");
             String deviceIdParam = ctx.getRequest().getQueryParams().get("deviceId");
             String deviceValueParam = ctx.getRequest().getQueryParams().get("deviceValue");
             if (userIdParam == null || deviceIdParam == null|| deviceValueParam == null) {
-                ctx.getResponse().status(400).send("Missing 'userId' or 'deviceId' or 'deviceValue' query parameter");
-                return;
+                throw new RuntimeException("Missing 'userId' or 'deviceId' or 'deviceValue' query parameter");
             }
     
             int userId;
@@ -112,15 +114,83 @@ public class UserHandler implements Handler {
                 deviceId = Integer.parseInt(deviceIdParam);
                 deviceValue = Integer.parseInt(deviceValueParam);
             } catch (NumberFormatException e) {
-                ctx.getResponse().status(400).send("Invalid 'userId' or 'deviceId' or 'deviceValue' format");
-                return;
+                throw new RuntimeException("Invalid 'userId' or 'deviceId' or 'deviceValue' format", e);
             }
             userService.updateDeviceValueById(userId, deviceId, deviceValue);
 
             ApiResponse successResponse = new ApiResponse("Success Update User Device Value", true, null);
-            ctx.getResponse()
+            try {
+                ctx.getResponse()
                 .contentType("application/json")
                 .send(mapper.writeValueAsString(successResponse));
-        });
-    }
+            } catch (Exception e) {
+                ctx.getResponse().status(500).send("Error serializing response");
+            }
+        };
+    
+    public void getAvlilableDevices(Context ctx) {
+        
+            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
+
+            if (userIdParam == null) {
+                throw new RuntimeException("Missing 'userId' query parameter");
+            }
+    
+            int userId;
+            try {
+                userId = Integer.parseInt(userIdParam);
+                
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Invalid 'userId' format", e);
+            }
+            
+            List<Map<String, Object>> devices = null;
+            try {
+                devices = userService.getTranslatedAvailableDevices(userId);
+            } catch (Exception e) {
+                throw new RuntimeException("Error getting available devices", e);
+            }
+
+            ApiResponse successResponse = new ApiResponse("Success Get Available Device", true, devices);
+            try {
+                ctx.getResponse()
+                .contentType("application/json")
+                .send(mapper.writeValueAsString(successResponse));
+            } catch (Exception e) {
+                ctx.getResponse().status(500).send("Error serializing response");
+            }
+        };
+    
+    public void getUserBindedDevices(Context ctx) {
+        
+            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
+
+            if (userIdParam == null) {
+                throw new RuntimeException("Missing 'userId' query parameter");
+            }
+    
+            int userId;
+            try {
+                userId = Integer.parseInt(userIdParam);
+                
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Invalid 'userId' format", e);
+            }
+            List<Map<String, Object>> devices = null;
+            try {
+                devices = userService.getUserBindedDevices(userId);
+            } catch (Exception e) {
+                throw new RuntimeException("Error getting user binded devices", e);
+            }
+
+            ApiResponse successResponse = new ApiResponse("Success Get User Devices", true, devices);
+            try {
+                ctx.getResponse()
+                .contentType("application/json")
+                .send(mapper.writeValueAsString(successResponse));
+            } catch (Exception e) {
+                ctx.getResponse().status(500).send("Error serializing response");
+            }
+        };
+    
 }

@@ -1,6 +1,8 @@
 package com.task1.smartthings.repository;
 
 import com.task1.smartthings.model.User;
+import com.task1.smartthings.model.Device;
+import com.task1.smartthings.model.dto.DeviceNameList;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,10 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
     private final DataSource dataSource;
-
     public UserRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -60,29 +63,33 @@ public class UserRepository {
 
     public void insertUserDevice(int userId, int deviceId) {
         String sql = "INSERT INTO user_devices (user_id, device_id) VALUES (?, ?)";
-        
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             stmt.setInt(2,deviceId);
-            stmt.executeQuery();
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to check if user exists", e);
+            e.printStackTrace();
+            throw new RuntimeException("failed to insert user device", e);
         }
     }
     public boolean userDeviceExists(int userId, int deviceId) {
-        String sql = "SELECT 1 FROM user_devices WHERE user_id = ? AND device_id = ?";
-        
+        String sql = "SELECT EXISTS (SELECT 1 FROM user_devices WHERE user_id = ? AND device_id = ?) AS user_device_exists;";
+    
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             stmt.setInt(2, deviceId);
-
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // If there's a result, a user exists
+                if (rs.next()) {
+                    return rs.getBoolean("user_device_exists");
+                } else {
+                    return false;
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to check if user exists", e);
+            return false;
         }
     }
     public void deleteUserDevice(int userId, int deviceId) {
@@ -92,9 +99,10 @@ public class UserRepository {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             stmt.setInt(2,deviceId);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to check if user exists", e);
+            e.printStackTrace();
+            throw new RuntimeException("Failed to unbind device", e);
         }
     }
     public void updateDeviceValueById(int deviceId, int newValue) {
@@ -110,5 +118,96 @@ public class UserRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update device_value for device ID: " + deviceId, e);
         }
+    }
+
+    public String GetUserCountryById(int userId) {
+        String sql = "SELECT country FROM users WHERE id = ?";
+        
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("country");
+                } else {
+                    throw new SQLException("User not found.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get user country", e);
+        }
+
+    }
+    public List<DeviceNameList> getAvailableDevices() {
+        String sql = "SELECT id, brand_name, device_name FROM devices WHERE deleted_at IS NULL";
+        List<DeviceNameList> devices = new ArrayList<>();
+        
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                DeviceNameList device = new DeviceNameList();
+                device.id = rs.getInt("id");
+                device.brandName = rs.getString("brand_name");
+
+                device.deviceName = rs.getString("device_name");
+
+                devices.add(device);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch translated devices", e);
+        }
+
+        return devices;
+    }
+    public List<DeviceNameList> userBindedDevice(int userId) {
+        String sql = "SELECT id, brand_name, device_name FROM user_devices ud left join devices d on d.id = ud.device_id WHERE user_id = ?";
+        List<DeviceNameList> devices = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    DeviceNameList device = new DeviceNameList();
+                    device.id = rs.getInt("id");
+                    device.brandName = rs.getString("brand_name");
+                    device.deviceName = rs.getString("device_name");
+                    devices.add(device);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch user binded devices", e);
+        }
+        return devices;
+    }
+
+    public Device getDeviceDetail(int deviceId){
+        String sql = "SELECT id, vendor_id, brand_name, device_name, device_description, device_config_json, device_value, created_at, updated_at, deleted_at FROM devices WHERE id = ?";
+        Device device = new Device();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, deviceId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    device.id = rs.getInt("id");
+                    device.vendorId = rs.getInt("vendor_id");
+                    device.brandName = rs.getString("brand_name");
+                    device.deviceName = rs.getString("device_name");
+                    device.deviceDescription = rs.getString("device_description");
+                    device.deviceConfigJson = rs.getString("device_config_json");
+                    device.deviceValue = rs.getInt("device_value");
+                    device.createdAt = rs.getTimestamp("created_at");
+                    device.updatedAt = rs.getTimestamp("updated_at");
+                    device.deletedAt = rs.getTimestamp("deleted_at");
+                } else {
+                    throw new SQLException("Device not found.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get device detail", e);
+        }
+        return device;
     }
 }

@@ -9,7 +9,7 @@ import com.task1.smartthings.model.dto.VendorDevices;
 import com.task1.smartthings.service.VendorService;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
-
+import org.slf4j.Logger;
 
 public class VendorHandler implements Handler {
 
@@ -30,31 +30,35 @@ public class VendorHandler implements Handler {
         //         .send(json));
     }
     public void listVendorDevices(Context ctx) {
-        ctx.parse(VendorDevices.class).then(vendorDevice -> {
         String vendorIdParam = ctx.getRequest().getQueryParams().get("vendorId");
+        Logger logger = org.slf4j.LoggerFactory.getLogger(VendorHandler.class);
+        logger.info("Listing devices for vendorId={}", vendorIdParam);
         if (vendorIdParam == null) {
-            ctx.getResponse().status(400).send("Missing 'vendor_id' query parameter");
-            return;
+            throw new RuntimeException("Missing 'vendorId' query parameter");
         }
+    
         int vendorId;
         try {
             vendorId = Integer.parseInt(vendorIdParam);
         } catch (NumberFormatException e) {
-            ctx.getResponse().status(400).send("Invalid 'vendor_id' format");
-            return;
+            throw new RuntimeException("Invalid 'vendorId' format", e);
         }
+    
         List<VendorDevices> listDevices;
-        try{
-            listDevices=vendorService.listVendorDevices(ctx, vendorId);
-        }catch(Exception e){
-            ctx.getResponse().status(500).send("Internal Server Error");
-            return;
+        try {
+            listDevices = vendorService.listVendorDevices(ctx, vendorId);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to list devices", e);
         }
-        
+    
         ApiResponse successResponse = new ApiResponse("Success Get List Device", true, listDevices);
-            ctx.getResponse().contentType("application/json");
-            ctx.getResponse().send(mapper.writeValueAsString(successResponse));
-        });
+        try {
+            ctx.getResponse()
+               .contentType("application/json")
+               .send(mapper.writeValueAsString(successResponse));
+        } catch (Exception e) {
+            ctx.getResponse().status(500).send("Error serializing response");
+        }
     }
 
 
@@ -69,42 +73,50 @@ public class VendorHandler implements Handler {
     }
     public void updateDevice(Context ctx) {
         ctx.parse(UpdateVendorDevice.class).then(updateDevice -> {
-            String idParam = ctx.getRequest().getQueryParams().get("id");
-            if (idParam == null) {
-                ctx.getResponse().status(400).send("Missing 'id' query parameter");
-                return;
+            String idParam = ctx.getRequest().getQueryParams().get("deviceId");
+            String vendorId = ctx.getRequest().getQueryParams().get("vendorId");
+            if (idParam == null|| vendorId == null) {
+                throw new RuntimeException("Missing 'id' or 'vendorId' query parameter");
             }
             int id;
+            int vendorIdInt;
             try {
                 id = Integer.parseInt(idParam);
+                vendorIdInt = Integer.parseInt(vendorId);
             } catch (NumberFormatException e) {
-                ctx.getResponse().status(400).send("Invalid 'id' format");
-                return;
+                throw new RuntimeException("Invalid 'id' or 'vendorId' format", e);
             }
-            vendorService.updateVendorDevice(id, updateDevice);
+            
+            vendorService.updateVendorDevice(id, vendorIdInt, updateDevice);
             ApiResponse successResponse = new ApiResponse("Success Update Device", true, null);
             ctx.getResponse().contentType("application/json");
             ctx.getResponse().send(mapper.writeValueAsString(successResponse));
             });
         }
     public void deleteDevice(Context ctx) {
-        ctx.parse(String.class).then(deleteDevice -> {
-            String idParam = ctx.getRequest().getQueryParams().get("id");
-            if (idParam == null) {
-                ctx.getResponse().status(400).send("Missing 'id' query parameter");
-                return;
+        
+            String idParam = ctx.getRequest().getQueryParams().get("deviceId");
+            String vendorId = ctx.getRequest().getQueryParams().get("vendorId");
+            if (idParam == null|| vendorId == null) {
+                throw new RuntimeException("Missing 'id' or 'vendorId' query parameter");
             }
             int id;
+            int vendorIdInt;
             try {
                 id = Integer.parseInt(idParam);
+                vendorIdInt = Integer.parseInt(vendorId);
             } catch (NumberFormatException e) {
-                ctx.getResponse().status(400).send("Invalid 'id' format");
-                return;
+                throw new RuntimeException("Invalid 'id' or 'vendorId' format", e);
             }
-            vendorService.deleteDevice(id);
+            vendorService.deleteDevice(id,vendorIdInt);
             ApiResponse successResponse = new ApiResponse("Success Delete Device", true, null);
-            ctx.getResponse().contentType("application/json");
-            ctx.getResponse().send(mapper.writeValueAsString(successResponse));
-            });
-        }    
+            try {
+                ctx.getResponse()
+                .contentType("application/json")
+                .send(mapper.writeValueAsString(successResponse));
+            } catch (Exception e) {
+                ctx.getResponse().status(500).send("Error serializing response");
+            }
+    };
+        
 }

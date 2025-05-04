@@ -26,33 +26,35 @@ public class VendorRepository {
 
     public List<VendorDevices> getAllVendorDevices(Context ctx,int id) throws SQLException {
         List<VendorDevices> devices = new ArrayList<>();
-        String query = "SELECT id, vendor_id, value, brand_name, device_name, device_description, device_config_json, device_value, created_at, updated_at, deleted_at FROM devices WHERE vendor_id = ? AND deleted_at IS NULL";
+        String query = "SELECT id, vendor_id, brand_name, device_name, device_description, device_config_json, device_value, created_at, updated_at, deleted_at FROM devices WHERE vendor_id = ? AND deleted_at IS NULL";
         
         try (Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery()) {
-                stmt.setInt(1, id);
-            while (rs.next()) {
-                VendorDevices d = new VendorDevices();
-                d.id = rs.getInt("id");
-                d.vendorId = rs.getInt("vendor_id");
-                d.value = rs.getInt("value");
-                d.brandName = rs.getString("brand_name");
-                d.deviceName = rs.getString("device_name");
-                d.deviceDescription = rs.getString("device_description");
-                d.deviceValue = rs.getInt("device_value");
-                d.createdAt = rs.getTimestamp("created_at");
-                d.updatedAt = rs.getTimestamp("updated_at");
-                d.deletedAt = rs.getTimestamp("deleted_at");
-                try {
-                    String configJson = rs.getString("device_config_json");
-                    if (configJson != null) {
-                        d.deviceConfigJson = mapper.readValue(configJson, DeviceConfigJson.class);
+        PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    VendorDevices d = new VendorDevices();
+                    d.id = rs.getInt("id");
+                    d.vendorId = rs.getInt("vendor_id");
+                    d.brandName = rs.getString("brand_name");
+                    d.deviceName = rs.getString("device_name");
+                    d.deviceDescription = rs.getString("device_description");
+                    d.deviceValue = rs.getInt("device_value");
+                    d.createdAt = rs.getTimestamp("created_at");
+                    d.updatedAt = rs.getTimestamp("updated_at");
+                    d.deletedAt = rs.getTimestamp("deleted_at");
+
+                    try {
+                        String configJson = rs.getString("device_config_json");
+                        if (configJson != null) {
+                            d.deviceConfigJson = mapper.readValue(configJson, DeviceConfigJson.class);
+                        }
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException("Failed to parse deviceConfigJson", e);
                     }
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException("Failed to serialize deviceConfigJson", e);
+
+                    devices.add(d);
                 }
-                devices.add(d);
             }
         }
         return devices;
@@ -62,29 +64,31 @@ public class VendorRepository {
         logger.info("Inserting device for vendorId={}", vendorDevices.getVendorId());
         String sql = """
             INSERT INTO devices (
-                vendor_id, value, brand_name, device_name,
+                vendor_id, brand_name, device_name,
                 device_description, device_config_json, device_value,
                 created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?::jsonb, ?, NOW(), NOW())
+            ) VALUES (?, ?, ?, ?, ?::jsonb, ?, NOW(), NOW())
         """;
     
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, vendorDevices.getVendorId());
-            stmt.setInt(2, vendorDevices.getValue());
-            stmt.setString(3, vendorDevices.getBrandName());
-            stmt.setString(4, vendorDevices.getDeviceName());
-            stmt.setString(5, vendorDevices.getDeviceDescription());
+            stmt.setString(2, vendorDevices.getBrandName());
+            stmt.setString(3, vendorDevices.getDeviceName());
+            stmt.setString(4, vendorDevices.getDeviceDescription());
+    
+            
+            
     
             // Serialize the DeviceConfigJson object to a JSON string
             try {
                 String json = mapper.writeValueAsString(vendorDevices.getDeviceConfigJson());
-                stmt.setString(6, json);  // Set the JSON string as the value for the jsonb column
+                stmt.setString(5, json);  // Set the JSON string as the value for the jsonb column
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Failed to serialize deviceConfigJson", e);
             }
     
-            stmt.setInt(7, vendorDevices.getDeviceValue());
+            stmt.setInt(6, vendorDevices.getDeviceValue());
     
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -92,17 +96,13 @@ public class VendorRepository {
         }
     }
     
-    public void updateVendorDeviceById(int id, UpdateVendorDevice update) {
+    public void updateVendorDeviceById(int id,int vendorId, UpdateVendorDevice update) {
         StringBuilder sql = new StringBuilder("UPDATE devices SET ");
         List<Object> params = new ArrayList<>();
     
         if (update.vendorId != null) {
             sql.append("vendor_id = ?, ");
             params.add(update.vendorId);
-        }
-        if (update.value != null) {
-            sql.append("value = ?, ");
-            params.add(update.value);
         }
         if (update.brandName != null) {
             sql.append("brand_name = ?, ");
@@ -135,9 +135,9 @@ public class VendorRepository {
             params.add(update.deviceValue);
         }
     
-        sql.append("updated_at = NOW() WHERE id = ? AND deleted_at IS NULL");
+        sql.append("updated_at = NOW() WHERE id = ? AND vendor_id = ? AND deleted_at IS NULL");
         params.add(id);
-    
+        params.add(vendorId);
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
     
@@ -150,12 +150,13 @@ public class VendorRepository {
             throw new RuntimeException("Failed to update device", e);
         }
     }
-    public void softDeleteDeviceById(int id) {
-        String sql = "UPDATE devices SET deleted_at = NOW() WHERE id = ?";
+    public void softDeleteDeviceById(int id,int vendorId) {
+        String sql = "UPDATE devices SET deleted_at = NOW() WHERE id = ? AND vendor_id = ? AND deleted_at IS NULL";
     
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
+            stmt.setInt(2, vendorId);
             int affectedRows = stmt.executeUpdate();
     
             if (affectedRows == 0) {

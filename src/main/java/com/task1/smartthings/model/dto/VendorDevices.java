@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 public class VendorDevices {
     public int id;
     public int vendorId;
-    public int value;
     public String brandName;
     public String deviceName;
     public String deviceDescription;
@@ -19,10 +18,7 @@ public class VendorDevices {
         return vendorId;
     }
 
-    public int getValue() {
-        return value;
-    }
-
+  
     public String getBrandName() {
         return brandName;
     }
@@ -48,9 +44,7 @@ public class VendorDevices {
         this.vendorId = vendorId;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
+
 
     public void setBrandName(String brandName) {
         this.brandName = brandName;

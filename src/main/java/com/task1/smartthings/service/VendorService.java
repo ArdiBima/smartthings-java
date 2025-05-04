@@ -23,12 +23,13 @@ public class VendorService {
 
     public void addDevice(Context ctx, VendorDevices vendorDevices) {
         repository.insertVendorDevice(ctx,vendorDevices);
+        
     }
-    public void updateVendorDevice(int id, UpdateVendorDevice updateDevice) {
-        repository.updateVendorDeviceById(id, updateDevice);
+    public void updateVendorDevice(int id, int vendorId, UpdateVendorDevice updateDevice) {
+        repository.updateVendorDeviceById(id,vendorId ,updateDevice);
     }
-    public void deleteDevice(int id) {
-        repository.softDeleteDeviceById(id);
+    public void deleteDevice(int id,int vendorId) {
+        repository.softDeleteDeviceById(id,vendorId);
     }
     
 }

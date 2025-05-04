@@ -1,10 +1,16 @@
 package com.task1.smartthings.model;
-
+import java.sql.Timestamp;
 public class Device {
     public int id;
     public int vendorId;
-    public String name;
-    public String description;
-    public String configJson;
-    public int value;
+    public String brandName;
+    public String deviceName;
+    public String deviceDescription;
+    public String deviceConfigJson;
+    public int deviceValue;
+    public Timestamp createdAt;
+    public Timestamp updatedAt;
+    public Timestamp deletedAt;
+
+    
 }

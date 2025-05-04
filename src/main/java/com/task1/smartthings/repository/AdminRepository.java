@@ -20,7 +20,7 @@ public class AdminRepository {
 
     public List<Device> getAllDevices() throws SQLException {
         List<Device> devices = new ArrayList<>();
-        String query = "SELECT * FROM devices";
+        String query = "SELECT id, vendor_id, brand_name, device_name, device_description, device_config_json, device_value, created_at, updated_at, deleted_at FROM devices";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
@@ -28,10 +28,14 @@ public class AdminRepository {
                 Device d = new Device();
                 d.id = rs.getInt("id");
                 d.vendorId = rs.getInt("vendor_id");
-                d.name = rs.getString("name");
-                d.description = rs.getString("description");
-                d.configJson = rs.getString("config_json");
-                d.value = rs.getInt("value");
+                d.brandName = rs.getString("brand_name");
+                d.deviceName = rs.getString("device_name");
+                d.deviceDescription = rs.getString("device_description");
+                d.deviceConfigJson = rs.getString("device_config_json");
+                d.deviceValue = rs.getInt("device_value");
+                d.createdAt = rs.getTimestamp("created_at");
+                d.updatedAt = rs.getTimestamp("updated_at");
+                d.deletedAt = rs.getTimestamp("deleted_at");
                 devices.add(d);
             }
         }
@@ -41,7 +45,7 @@ public class AdminRepository {
     public User getUserDetail(Context ctx, int userId) throws SQLException {
         String sql = "SELECT id, name, dob, address, country, created_at, updated_at, deleted_at FROM users WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             
             try (ResultSet rs = stmt.executeQuery()) {
@@ -63,6 +67,7 @@ public class AdminRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to get user detail", e);
         }
+        
     }
     public List<AdminVendorDeviceStats> getVendorDeviceStats() {
         List<AdminVendorDeviceStats> result = new ArrayList<>();

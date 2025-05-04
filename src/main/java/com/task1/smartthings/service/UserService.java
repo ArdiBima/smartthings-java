@@ -3,20 +3,33 @@ package com.task1.smartthings.service;
 
 
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import com.task1.smartthings.service.pkg.ThirdPartyTranslator;
 import com.task1.smartthings.model.User;
-import com.task1.smartthings.model.dto.UserRegisterDTO;
-import com.task1.smartthings.repository.UserRepository;
+import com.task1.smartthings.model.Device;
 
+import com.task1.smartthings.model.dto.DeviceNameList;
+import com.task1.smartthings.model.dto.UserRegisterDTO;
+import com.task1.smartthings.model.dto.DeviceConfigJson;
+import com.task1.smartthings.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UserService {
     private final UserRepository repository;
+    private final ThirdPartyTranslator translator;
+    private final ObjectMapper mapper;
     // init
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, ThirdPartyTranslator translator, ObjectMapper mapper) {
         this.repository = repository;
+        this.translator = translator;
+        this.mapper = mapper;
     }
     public int registerUser(UserRegisterDTO dto) {
         User user = new User();
@@ -67,6 +80,55 @@ public class UserService {
         if (!userDeviceExist){
             throw new RuntimeException("User is not binded to device.");
         }
+        Device deviceDetail = repository.getDeviceDetail(deviceId);
+        DeviceConfigJson configJson;
+        try {
+            configJson= mapper.readValue(deviceDetail.deviceConfigJson, DeviceConfigJson.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse device configuration JSON", e);
+        }
+        if (newValue < configJson.minValue || newValue > configJson.maxValue) {
+            throw new RuntimeException("Value is out of range");
+        }
         repository.updateDeviceValueById(deviceId, newValue);
     }
+    public List<Map<String, Object>> getTranslatedAvailableDevices(int userId) throws IOException {
+        String userCountry = repository.GetUserCountryById(userId);
+        List<DeviceNameList> devices = repository.getAvailableDevices();
+        List<Map<String, Object>> translatedDevices = new ArrayList<>();
+    
+        for (DeviceNameList device : devices) {
+            String translatedName = translator.translateDeviceName(device.deviceName, userCountry);
+    
+            Map<String, Object> deviceMap = new HashMap<>();
+            deviceMap.put("id", device.id);
+            deviceMap.put("brandName", device.brandName);
+            deviceMap.put("deviceName", device.deviceName); 
+            deviceMap.put("translatedName", translatedName);
+    
+            translatedDevices.add(deviceMap);
+        }
+    
+        return translatedDevices;
+    }
+    public List<Map<String, Object>> getUserBindedDevices(int userId) throws IOException {
+        String userCountry = repository.GetUserCountryById(userId);
+        List<DeviceNameList> devices = repository.userBindedDevice(userId);
+        List<Map<String, Object>> translatedDevices = new ArrayList<>();
+    
+        for (DeviceNameList device : devices) {
+            String translatedName = translator.translateDeviceName(device.deviceName, userCountry);
+    
+            Map<String, Object> deviceMap = new HashMap<>();
+            deviceMap.put("id", device.id);
+            deviceMap.put("brandName", device.brandName);
+            deviceMap.put("deviceName", device.deviceName); 
+            deviceMap.put("translatedName", translatedName);
+    
+            translatedDevices.add(deviceMap);
+        }
+    
+        return translatedDevices;
+    }
+    
 }
