@@ -1,27 +1,57 @@
-CREATE TABLE vendors (
-    id SERIAL PRIMARY KEY,
-    brand_name VARCHAR(100) NOT NULL
+create table public.vendors
+(
+    id         serial
+        primary key,
+    brand_name varchar(100) not null
 );
 
-CREATE TABLE devices (
-    id SERIAL PRIMARY KEY,
-    vendor_id INT REFERENCES vendors(id),
-    name VARCHAR(100),
-    description TEXT,
-    config_json JSONB,
-    value INT
+alter table public.vendors
+    owner to postgres;
+
+create table public.devices
+(
+    id                 serial
+        primary key,
+    vendor_id          integer
+        references public.vendors,
+    brand_name         varchar(100),
+    device_name        varchar(100),
+    device_description text,
+    device_config_json jsonb,
+    device_value       integer,
+    created_at         timestamp,
+    updated_at         timestamp,
+    deleted_at         timestamp
 );
 
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    dob DATE,
-    address TEXT,
-    country VARCHAR(50)
+alter table public.devices
+    owner to postgres;
+
+create table public.users
+(
+    id         serial
+        primary key,
+    name       varchar(100),
+    dob        date,
+    address    text,
+    country    varchar(50),
+    created_at timestamp,
+    updated_at timestamp,
+    deleted_at timestamp
 );
 
-CREATE TABLE user_devices (
-    user_id INT REFERENCES users(id),
-    device_id INT REFERENCES devices(id),
-    PRIMARY KEY (user_id, device_id)
+alter table public.users
+    owner to postgres;
+
+create table public.user_devices
+(
+    user_id   integer not null
+        references public.users,
+    device_id integer not null
+        references public.devices,
+    primary key (user_id, device_id)
 );
+
+alter table public.user_devices
+    owner to postgres;
+
