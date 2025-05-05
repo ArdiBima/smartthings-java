@@ -12,6 +12,7 @@ import com.task1.smartthings.service.AdminService;
 import com.task1.smartthings.service.TranslationService;
 import com.task1.smartthings.service.VendorService;
 import com.task1.smartthings.service.pkg.ThirdPartyTranslator;
+import com.task1.smartthings.util.JwtUtilRSA;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.sql.DataSource;
 import ratpack.func.Action;
@@ -22,6 +23,7 @@ public class Router {
         return chain -> chain
             .all(new Middleware())
             .prefix("v1/smartthings", smartthings -> {
+                JwtUtilRSA jwtUtilRSA = new JwtUtilRSA();
                 ObjectMapper mapper = new ObjectMapper();
                 smartthings.get("health", ctx -> ctx.getResponse().send("OK"));
                 // Devices routes
@@ -36,11 +38,14 @@ public class Router {
 
                 // Users routes
                 smartthings.prefix("users", userChain -> {
+                    
                     ThirdPartyTranslator translator = new ThirdPartyTranslator();
                     UserRepository userRepo = new UserRepository(dataSource);
-                    UserService userService = new UserService(userRepo, translator, mapper);
+                    UserService userService = new UserService(userRepo, translator, mapper,jwtUtilRSA);
                     UserHandler userHandler = new UserHandler(userService, mapper);
                     userChain.post("register", userHandler::registerUser);
+                    userChain.post("login", userHandler::login);
+                    userChain.all(new JwtMiddleware(jwtUtilRSA));
                     userChain.post("device/bind", userHandler::bindDeviceUser);
                     userChain.post("device/unbind", userHandler::unbindDeviceUser);
                     userChain.post("device/control", userHandler::changeDeviceValue);

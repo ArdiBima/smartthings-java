@@ -9,6 +9,8 @@ public class User {
     public LocalDate dob;
     public String address;
     public String country;
+    public String email;
+    public String password;
     public Timestamp createdAt;
     public Timestamp updatedAt;
     public Timestamp deletedAt;

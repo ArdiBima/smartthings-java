@@ -40,17 +40,17 @@ public class UserHandler implements Handler {
     }
     public void bindDeviceUser(Context ctx) {
        
-            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
+            // 
             String deviceIdParam = ctx.getRequest().getQueryParams().get("deviceId");
 
-            if (userIdParam == null || deviceIdParam == null) {
-                throw new RuntimeException("Missing 'userId' or 'deviceId' query parameter");
+            if ( deviceIdParam == null) {
+                throw new RuntimeException("Missing  'deviceId' query parameter");
             }
     
             int userId;
             int deviceId;
             try {
-                userId = Integer.parseInt(userIdParam);
+                userId = ctx.get(Integer.class);
                 deviceId = Integer.parseInt(deviceIdParam);
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid 'userId' or 'deviceId' format", e);
@@ -70,17 +70,16 @@ public class UserHandler implements Handler {
     
     public void unbindDeviceUser(Context ctx) {
         
-            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
             String deviceIdParam = ctx.getRequest().getQueryParams().get("deviceId");
 
-            if (userIdParam == null || deviceIdParam == null) {
+            if ( deviceIdParam == null) {
                 throw new RuntimeException("Missing 'userId' or 'deviceId' query parameter");
             }
     
             int userId;
             int deviceId;
             try {
-                userId = Integer.parseInt(userIdParam);
+                userId = ctx.get(Integer.class);
                 deviceId = Integer.parseInt(deviceIdParam);
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid 'userId' or 'deviceId' format", e);
@@ -99,10 +98,10 @@ public class UserHandler implements Handler {
     
     public void changeDeviceValue(Context ctx) {
         
-            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
+            
             String deviceIdParam = ctx.getRequest().getQueryParams().get("deviceId");
             String deviceValueParam = ctx.getRequest().getQueryParams().get("deviceValue");
-            if (userIdParam == null || deviceIdParam == null|| deviceValueParam == null) {
+            if ( deviceIdParam == null|| deviceValueParam == null) {
                 throw new RuntimeException("Missing 'userId' or 'deviceId' or 'deviceValue' query parameter");
             }
     
@@ -110,7 +109,7 @@ public class UserHandler implements Handler {
             int deviceId;
             int deviceValue;
             try {
-                userId = Integer.parseInt(userIdParam);
+                userId = ctx.get(Integer.class);
                 deviceId = Integer.parseInt(deviceIdParam);
                 deviceValue = Integer.parseInt(deviceValueParam);
             } catch (NumberFormatException e) {
@@ -130,15 +129,12 @@ public class UserHandler implements Handler {
     
     public void getAvlilableDevices(Context ctx) {
         
-            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
+            
 
-            if (userIdParam == null) {
-                throw new RuntimeException("Missing 'userId' query parameter");
-            }
-    
+            
             int userId;
             try {
-                userId = Integer.parseInt(userIdParam);
+                userId = ctx.get(Integer.class);
                 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid 'userId' format", e);
@@ -162,16 +158,9 @@ public class UserHandler implements Handler {
         };
     
     public void getUserBindedDevices(Context ctx) {
-        
-            String userIdParam = ctx.getRequest().getQueryParams().get("userId");
-
-            if (userIdParam == null) {
-                throw new RuntimeException("Missing 'userId' query parameter");
-            }
-    
             int userId;
             try {
-                userId = Integer.parseInt(userIdParam);
+                userId = ctx.get(Integer.class);
                 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid 'userId' format", e);
@@ -180,7 +169,6 @@ public class UserHandler implements Handler {
             try {
                 devices = userService.getUserBindedDevices(userId);
             } catch (Exception e) {
-                throw new RuntimeException("Error getting user binded devices", e);
             }
 
             ApiResponse successResponse = new ApiResponse("Success Get User Devices", true, devices);
@@ -192,5 +180,20 @@ public class UserHandler implements Handler {
                 ctx.getResponse().status(500).send("Error serializing response");
             }
         };
-    
+    public void login(Context ctx) {
+        String email = ctx.getRequest().getQueryParams().get("email");
+        String password = ctx.getRequest().getQueryParams().get("password");
+        if (email == null || password == null) {
+            throw new RuntimeException("Missing 'username' or 'password' query parameter");
+        }
+        String token = userService.login(email, password);
+        ApiResponse successResponse = new ApiResponse("Success Login", true, token);
+        try {
+            ctx.getResponse()
+            .contentType("application/json")
+            .send(mapper.writeValueAsString(successResponse));
+        } catch (Exception e) {
+            ctx.getResponse().status(500).send("Error serializing response");
+        }
+    };
 }

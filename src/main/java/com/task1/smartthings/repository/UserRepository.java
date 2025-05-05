@@ -21,8 +21,8 @@ public class UserRepository {
 
     public int insertUser(User user) {
     String sql = """
-        INSERT INTO users (name, dob, address, country, created_at, updated_at)
-        VALUES (?, ?, ?, ?, NOW(), NOW())
+        INSERT INTO users (name, dob, address, country, email,password,created_at, updated_at)
+        VALUES (?, ?, ?, ?,?,?, NOW(), NOW())
         RETURNING id
     """;
 
@@ -33,6 +33,8 @@ public class UserRepository {
             stmt.setDate(2, java.sql.Date.valueOf(user.dob));
             stmt.setString(3, user.address);
             stmt.setString(4, user.country);
+            stmt.setString(5, user.email);
+            stmt.setString(6, user.password);
 
         try (ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
@@ -209,5 +211,37 @@ public class UserRepository {
             throw new RuntimeException("Failed to get device detail", e);
         }
         return device;
+    }
+    public Integer login(String email) {
+        String sql = "SELECT id FROM users WHERE email = ? ";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    throw new SQLException("User not found.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to login", e);
+        }
+    }
+    public String getHashedPasswordByEmail(String email){
+        String sql = "SELECT password FROM users WHERE email = ? ";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("password");
+                } else {
+                    throw new SQLException("User not found.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to login", e);
+        }
     }
 }

@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.task1.smartthings.service.pkg.ThirdPartyTranslator;
+import com.task1.smartthings.util.JwtUtilRSA;
+import com.task1.smartthings.util.PasswordUtil;
 import com.task1.smartthings.model.User;
 import com.task1.smartthings.model.Device;
 
@@ -25,11 +27,13 @@ public class UserService {
     private final UserRepository repository;
     private final ThirdPartyTranslator translator;
     private final ObjectMapper mapper;
+    private final JwtUtilRSA jwtUtilRSA;
     // init
-    public UserService(UserRepository repository, ThirdPartyTranslator translator, ObjectMapper mapper) {
+    public UserService(UserRepository repository, ThirdPartyTranslator translator, ObjectMapper mapper,JwtUtilRSA jwtUtilRSA) {
         this.repository = repository;
         this.translator = translator;
         this.mapper = mapper;
+        this.jwtUtilRSA = jwtUtilRSA;
     }
     public int registerUser(UserRegisterDTO dto) {
         User user = new User();
@@ -45,7 +49,14 @@ public class UserService {
 
         user.address = dto.getAddress();
         user.country = dto.getCountry();
-
+        user.email = dto.getEmail();
+        String hashedPassword;
+        try {
+            hashedPassword = PasswordUtil.hashPassword(dto.getPassword());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to hash password", e);
+        }
+        user.password = hashedPassword;
         // Check if a user with the same name and DOB already exists
         
             boolean userExist=repository.userExists(user.name, user.dob);
@@ -130,5 +141,29 @@ public class UserService {
     
         return translatedDevices;
     }
+
+    public String login(String email, String password) {
+    String storedHashedPassword = repository.getHashedPasswordByEmail(email);
+    if (storedHashedPassword == null) {
+        throw new RuntimeException("Invalid email or password");
+    }
+
+    try {
+        boolean isValid = PasswordUtil.verifyPassword(password, storedHashedPassword);
+        if (!isValid) {
+            throw new RuntimeException("Invalid email or password");
+        }
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to verify password", e);
+    }
+
+    int userId = repository.login(email);
+    try {
+        System.out.println("User with ID: " + userId + " successfully logged in.");
+        return jwtUtilRSA.createToken(userId);
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to generate token", e);
+    }
+}
     
 }
