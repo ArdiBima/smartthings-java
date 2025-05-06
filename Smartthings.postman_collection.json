@@ -1,0 +1,1402 @@
+{
+	"info": {
+		"_postman_id": "3b813a03-7e4d-419c-b5de-5dc0b1f2c3b4",
+		"name": "Smartthings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34368306"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bob\",\n    \"dob\": \"1990-05-01\",\n    \"address\": \"123 Main St, Springfield\",\n    \"country\": \"germany\",\n    \"email\":\"bob@gmail.com\",\n    \"password\":\"123456789\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Bob\",\n    \"dob\": \"1990-05-01\",\n    \"address\": \"123 Main St, Springfield\",\n    \"country\": \"germany\",\n    \"email\":\"bob@gmail.com\",\n    \"password\":\"123456789\"\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Register User\",\n    \"success\": true,\n    \"data\": {\n        \"userId\": 6\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Bind Device",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/device/bind?deviceId=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"device",
+								"bind"
+							],
+							"query": [
+								{
+									"key": "deviceId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Bind Device",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/device/bind?deviceId=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"device",
+										"bind"
+									],
+									"query": [
+										{
+											"key": "deviceId",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Bind User Device\",\n    \"success\": true,\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "unbind device",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/device/unbind?deviceId=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"device",
+								"unbind"
+							],
+							"query": [
+								{
+									"key": "deviceId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "unbind device",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/device/unbind?deviceId=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"device",
+										"unbind"
+									],
+									"query": [
+										{
+											"key": "deviceId",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Unbind User Device\",\n    \"success\": true,\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "device control",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/device/control?deviceId=5&deviceValue=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"device",
+								"control"
+							],
+							"query": [
+								{
+									"key": "deviceId",
+									"value": "5"
+								},
+								{
+									"key": "deviceValue",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "device control",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/device/control?deviceId=5&deviceValue=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"device",
+										"control"
+									],
+									"query": [
+										{
+											"key": "deviceId",
+											"value": "5"
+										},
+										{
+											"key": "deviceValue",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Update User Device Value\",\n    \"success\": true,\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Binded Device List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/devices/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"devices",
+								"list"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Binded Device List",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/devices/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"devices",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Get User Devices\",\n    \"success\": true,\n    \"data\": [\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 5,\n            \"translatedName\": \"Lampe\",\n            \"deviceName\": \"lightbulb\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Device Available",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/devices/available",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"devices",
+								"available"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Device Available",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/devices/available",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"devices",
+										"available"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Get Available Device\",\n    \"success\": true,\n    \"data\": [\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 3,\n            \"translatedName\": \"Smart Tv\",\n            \"deviceName\": \"Smart Tv\"\n        },\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 2,\n            \"translatedName\": \"Smart Bulb\",\n            \"deviceName\": \"Smart Bulb\"\n        },\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 6,\n            \"translatedName\": \"LÃ¼fter\",\n            \"deviceName\": \"fan\"\n        },\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 7,\n            \"translatedName\": \"Klimaanlage\",\n            \"deviceName\": \"air conditioner\"\n        },\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 8,\n            \"translatedName\": \"Fernseher\",\n            \"deviceName\": \"tv\"\n        },\n        {\n            \"brandName\": \"Samsung\",\n            \"id\": 5,\n            \"translatedName\": \"Lampe\",\n            \"deviceName\": \"lightbulb\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response\r",
+									"let response = pm.response.json();\r",
+									"\r",
+									"// Check if login is successful and accessToken exists\r",
+									"if (response.success && response.data && response.data.accessToken) {\r",
+									"    // Save accessToken as a collection variable\r",
+									"    pm.collectionVariables.set(\"accessToken\", response.data.accessToken);\r",
+									"    console.log(\"Access token saved to collection variables.\");\r",
+									"} else {\r",
+									"    console.warn(\"Login failed or accessToken not found in response.\");\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/users/login?email=budi@gmail.com&password=123456789",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"users",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "budi@gmail.com"
+								},
+								{
+									"key": "password",
+									"value": "123456789"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/users/login?email=bob@gmail.com&password=123456789",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"users",
+										"login"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "bob@gmail.com"
+										},
+										{
+											"key": "password",
+											"value": "123456789"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Login\",\n    \"success\": true,\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImV4cCI6MTc0NjUzODg3MX0.hu21LPrXPFcR1aiPddRy5y8l5Akd9vTsyca_ZrC1WMcbws3Z920BetXnDfW_VafK9XsM4lFDn5XtvzIizLhBQkShkCgtWMBQmBaN-CENtNb9UKqsPtv9A5nJNUXd_kmoB6VS1GURrOgXA2yoDyaYtGzXDqg2cQzViZ3mj8ywpyPo1XQ_KfzuKUHRwGfLXHfiYsTm7JWlhhh2ywnbscD8o1GzU0IGbdQN8c3xKyQq7SXUdruxvgc1z46F8N0Tedp3EG5lTxV0DnIozNm5UA57BPghTvXTFCdQl35M72OYjYxtpAjm_mrDu6qMmsyC6AP21L4NIeKPofxRQqvYCltGBA\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Vendor",
+			"item": [
+				{
+					"name": "Vendor Devices List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "VENDOR_PASSWORD",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "VENDOR_USERNAME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/vendors/devices/list?vendorId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"vendors",
+								"devices",
+								"list"
+							],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Vendor Devices List",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/vendors/devices/list?vendorId=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"vendors",
+										"devices",
+										"list"
+									],
+									"query": [
+										{
+											"key": "vendorId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Get List Device\",\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 3,\n            \"vendorId\": 1,\n            \"brandName\": \"Samsung\",\n            \"deviceName\": \"Smart Tv\",\n            \"deviceDescription\": \"A smart Tv\",\n            \"deviceConfigJson\": {\n                \"minValue\": 0,\n                \"maxValue\": 100,\n                \"defaultValue\": 0\n            },\n            \"deviceValue\": 0,\n            \"createdAt\": 1746177936506,\n            \"updatedAt\": 1746177936506,\n            \"deletedAt\": null\n        },\n        {\n            \"id\": 2,\n            \"vendorId\": 1,\n            \"brandName\": \"Samsung\",\n            \"deviceName\": \"Smart Bulb\",\n            \"deviceDescription\": \"A smart LED bulb\",\n            \"deviceConfigJson\": {\n                \"minValue\": 0,\n                \"maxValue\": 100,\n                \"defaultValue\": 0\n            },\n            \"deviceValue\": 0,\n            \"createdAt\": 1746176583994,\n            \"updatedAt\": 1746176583994,\n            \"deletedAt\": null\n        },\n        {\n            \"id\": 6,\n            \"vendorId\": 1,\n            \"brandName\": \"Samsung\",\n            \"deviceName\": \"fan\",\n            \"deviceDescription\": \"A smart fan\",\n            \"deviceConfigJson\": {\n                \"minValue\": 0,\n                \"maxValue\": 100,\n                \"defaultValue\": 5\n            },\n            \"deviceValue\": 0,\n            \"createdAt\": 1746357063411,\n            \"updatedAt\": 1746357063411,\n            \"deletedAt\": null\n        },\n        {\n            \"id\": 7,\n            \"vendorId\": 1,\n            \"brandName\": \"Samsung\",\n            \"deviceName\": \"air conditioner\",\n            \"deviceDescription\": \"A smart air conditioner\",\n            \"deviceConfigJson\": {\n                \"minValue\": 0,\n                \"maxValue\": 100,\n                \"defaultValue\": 5\n            },\n            \"deviceValue\": 0,\n            \"createdAt\": 1746357071325,\n            \"updatedAt\": 1746357071325,\n            \"deletedAt\": null\n        },\n        {\n            \"id\": 8,\n            \"vendorId\": 1,\n            \"brandName\": \"Samsung\",\n            \"deviceName\": \"tv\",\n            \"deviceDescription\": \"A smart tv\",\n            \"deviceConfigJson\": {\n                \"minValue\": 0,\n                \"maxValue\": 100,\n                \"defaultValue\": 5\n            },\n            \"deviceValue\": 0,\n            \"createdAt\": 1746357081159,\n            \"updatedAt\": 1746357081159,\n            \"deletedAt\": null\n        },\n        {\n            \"id\": 5,\n            \"vendorId\": 1,\n            \"brandName\": \"Samsung\",\n            \"deviceName\": \"lightbulb\",\n            \"deviceDescription\": \"A smart lightbulb\",\n            \"deviceConfigJson\": {\n                \"minValue\": 0,\n                \"maxValue\": 100,\n                \"defaultValue\": 5\n            },\n            \"deviceValue\": 0,\n            \"createdAt\": 1746357051750,\n            \"updatedAt\": 1746537152395,\n            \"deletedAt\": null\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Vendor Insert Device",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "VENDOR_PASSWORD",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "VENDOR_USERNAME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vendorId\": 1,\n    \"brandName\": \"Samsung\",\n    \"deviceName\": \"watch\",\n    \"deviceDescription\": \"A smart watch\",\n    \"deviceConfigJson\": {\n      \"minValue\": 0,\n      \"maxValue\": 100,\n      \"defaultValue\":5\n    },\n    \"deviceValue\": 0\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/vendors/device/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"vendors",
+								"device",
+								"add"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Vendor Insert Device",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"vendorId\": 1,\n    \"brandName\": \"Samsung\",\n    \"deviceName\": \"watch\",\n    \"deviceDescription\": \"A smart watch\",\n    \"deviceConfigJson\": {\n      \"minValue\": 0,\n      \"maxValue\": 100,\n      \"defaultValue\":5\n    },\n    \"deviceValue\": 0\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/vendors/device/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"vendors",
+										"device",
+										"add"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Insert Device\",\n    \"success\": true,\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "update device",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "VENDOR_PASSWORD",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "VENDOR_USERNAME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"deviceDescription\":\"test 2 change description smart kulkas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/vendors/device/update?deviceId=4&vendorId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"vendors",
+								"device",
+								"update"
+							],
+							"query": [
+								{
+									"key": "deviceId",
+									"value": "4"
+								},
+								{
+									"key": "vendorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update device",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"deviceDescription\":\"test 2 change description smart kulkas\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/vendors/device/update?deviceId=4&vendorId=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"vendors",
+										"device",
+										"update"
+									],
+									"query": [
+										{
+											"key": "deviceId",
+											"value": "4"
+										},
+										{
+											"key": "vendorId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Update Device\",\n    \"success\": true,\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Device",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "VENDOR_USERNAME",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "VENDOR_PASSWORD",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/vendors/device/delete?deviceId=4&vendorId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"vendors",
+								"device",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "deviceId",
+									"value": "4"
+								},
+								{
+									"key": "vendorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Device",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/vendors/device/delete?deviceId=3&vendorId=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"vendors",
+										"device",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "deviceId",
+											"value": "3"
+										},
+										{
+											"key": "vendorId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Delete Device\",\n    \"success\": true,\n    \"data\": null\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "userDetail",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "ADMIN_PASSWORD",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ADMIN_USERNAME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/admin/user/detail?userId=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"admin",
+								"user",
+								"detail"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "userDetail",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/admin/user/detail?userId=3",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"admin",
+										"user",
+										"detail"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Internal Server Error: Failed to list devices\",\n    \"success\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "list user",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "ADMIN_PASSWORD",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ADMIN_USERNAME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/admin/list/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"admin",
+								"list",
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "list user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/admin/list/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"admin",
+										"list",
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Get Stats\",\n    \"success\": true,\n    \"data\": [\n        {\n            \"userId\": 6,\n            \"name\": \"Bob\",\n            \"deviceCount\": 1\n        },\n        {\n            \"userId\": 5,\n            \"name\": \"BUDI\",\n            \"deviceCount\": 1\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "list Vendor",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "ADMIN_PASSWORD",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ADMIN_USERNAME",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5050/v1/smartthings/admin/list/vendor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"v1",
+								"smartthings",
+								"admin",
+								"list",
+								"vendor"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/admin/list/vendor",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"admin",
+										"list",
+										"vendor"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Internal Server Error: Unauthorized: No token provided\",\n    \"success\": false\n}"
+						},
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5050/v1/smartthings/admin/list/vendor",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"v1",
+										"smartthings",
+										"admin",
+										"list",
+										"vendor"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success Get Stats\",\n    \"success\": true,\n    \"data\": [\n        {\n            \"deviceId\": 5,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"lightbulb\",\n            \"userCount\": 2\n        },\n        {\n            \"deviceId\": 3,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"Smart Tv\",\n            \"userCount\": 0\n        },\n        {\n            \"deviceId\": 8,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"tv\",\n            \"userCount\": 0\n        },\n        {\n            \"deviceId\": 6,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"fan\",\n            \"userCount\": 0\n        },\n        {\n            \"deviceId\": 9,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"watch\",\n            \"userCount\": 0\n        },\n        {\n            \"deviceId\": 2,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"Smart Bulb\",\n            \"userCount\": 0\n        },\n        {\n            \"deviceId\": 7,\n            \"vendorId\": 1,\n            \"brandName\": \"samsung\",\n            \"deviceName\": \"air conditioner\",\n            \"userCount\": 0\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

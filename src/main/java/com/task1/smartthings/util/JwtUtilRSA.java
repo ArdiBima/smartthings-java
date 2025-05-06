@@ -52,7 +52,7 @@ public class JwtUtilRSA {
 
     public String createToken(int userId) throws Exception {
         String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
-        String payload = "{\"userId\":" + userId + "}";
+        String payload = "{\"userId\":" + userId + ",\"exp\":" + (System.currentTimeMillis() / 1000 + Integer.parseInt(System.getProperty("JWT_TIME_LIMIT", "3600"))) + "}";
 
         String encodedHeader = base64UrlEncode(header);
         String encodedPayload = base64UrlEncode(payload);
@@ -92,8 +92,14 @@ public class JwtUtilRSA {
 
 
             String payloadJson = new String(base64UrlDecode(parts[1]), StandardCharsets.UTF_8);
-            if (!payloadJson.contains("\"userId\":")) {
-                System.err.println("User ID missing from payload.");
+            if (!payloadJson.contains("\"userId\":") || !payloadJson.contains("\"exp\":")) {
+                System.err.println("User ID or exp missing from payload.");
+                return null;
+            }
+
+            long exp = Long.parseLong(payloadJson.replaceAll(".*\"exp\":(\\d+).*", "$1"));
+            if (exp < System.currentTimeMillis() / 1000) {
+                System.err.println("Token expired.");
                 return null;
             }
 

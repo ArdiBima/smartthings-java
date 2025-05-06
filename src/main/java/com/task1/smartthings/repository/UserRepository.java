@@ -165,7 +165,7 @@ public class UserRepository {
         return devices;
     }
     public List<DeviceNameList> userBindedDevice(int userId) {
-        String sql = "SELECT id, brand_name, device_name FROM user_devices ud left join devices d on d.id = ud.device_id WHERE user_id = ?";
+        String sql = "SELECT id, brand_name, device_name FROM user_devices ud left join devices d on d.id = ud.device_id WHERE user_id = ? AND d.deleted_at IS NULL";
         List<DeviceNameList> devices = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {

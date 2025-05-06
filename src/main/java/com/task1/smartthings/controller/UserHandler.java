@@ -187,7 +187,9 @@ public class UserHandler implements Handler {
             throw new RuntimeException("Missing 'username' or 'password' query parameter");
         }
         String token = userService.login(email, password);
-        ApiResponse successResponse = new ApiResponse("Success Login", true, token);
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("accessToken", token);
+        ApiResponse successResponse = new ApiResponse("Success Login", true, tokenMap);
         try {
             ctx.getResponse()
             .contentType("application/json")

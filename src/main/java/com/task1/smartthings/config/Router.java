@@ -27,13 +27,14 @@ public class Router {
                 ObjectMapper mapper = new ObjectMapper();
                 smartthings.get("health", ctx -> ctx.getResponse().send("OK"));
                 // Devices routes
-                smartthings.prefix("admin", deviceChain -> {
+                smartthings.prefix("admin", adminChain -> {
                     AdminRepository deviceRepo = new AdminRepository(dataSource);
                     AdminService deviceService = new AdminService(deviceRepo);
                     AdminHandler adminHandler = new AdminHandler(deviceService, mapper);
-                    deviceChain.get("user/detail", adminHandler::userDetail);
-                    deviceChain.get("list/user", adminHandler::getUserDeviceStats);
-                    deviceChain.get("list/vendor", adminHandler::getVendorDeviceStats);
+                    adminChain.all(new BasicAuthMiddleware(System.getProperty("ADMIN_USERNAME"), System.getProperty("ADMIN_PASSWORD")));
+                    adminChain.get("user/detail", adminHandler::userDetail);
+                    adminChain.get("list/user", adminHandler::getUserDeviceStats);
+                    adminChain.get("list/vendor", adminHandler::getVendorDeviceStats);
                 });
 
                 // Users routes
@@ -58,6 +59,7 @@ public class Router {
                     VendorRepository vendorRepo = new VendorRepository(dataSource);
                     VendorService vendorService = new VendorService(vendorRepo);
                     VendorHandler vendorHandler = new VendorHandler(vendorService, mapper);
+                    vendorChain.all(new BasicAuthMiddleware(System.getProperty("VENDOR_USERNAME"), System.getProperty("VENDOR_PASSWORD")));
                     vendorChain.get("devices/list", vendorHandler::listVendorDevices);
                     vendorChain.post("device/add", vendorHandler::createDevice);
                     vendorChain.post("device/update", vendorHandler::updateDevice);
