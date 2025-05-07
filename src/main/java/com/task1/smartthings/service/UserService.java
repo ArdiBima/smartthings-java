@@ -28,7 +28,7 @@ public class UserService {
     private final ThirdPartyTranslator translator;
     private final ObjectMapper mapper;
     private final JwtUtilRSA jwtUtilRSA;
-    // init
+    
     public UserService(UserRepository repository, ThirdPartyTranslator translator, ObjectMapper mapper,JwtUtilRSA jwtUtilRSA) {
         this.repository = repository;
         this.translator = translator;
@@ -39,9 +39,7 @@ public class UserService {
         User user = new User();
         user.name = dto.getName();
 
-        // Parse the DOB string into a LocalDate
         try {
-            // Assumes dto.dob is in ISO format "yyyy-MM-dd"
             user.dob = LocalDate.parse(dto.getDob(), DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid date format for dob, expected yyyy-MM-dd", e);
@@ -57,17 +55,12 @@ public class UserService {
             throw new RuntimeException("Failed to hash password", e);
         }
         user.password = hashedPassword;
-        // Check if a user with the same name and DOB already exists
         
             boolean userExist=repository.userExists(user.name, user.dob);
             if (userExist){
                 throw new RuntimeException("User is already exist.");
-            }
-            // Ignore, user doesn't exist
+            }            
             
-        
-
-        // Insert the user if no duplicate found
         int userId = repository.insertUser(user);
 
         return userId;

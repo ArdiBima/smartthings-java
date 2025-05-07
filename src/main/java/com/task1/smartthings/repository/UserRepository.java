@@ -56,7 +56,7 @@ public class UserRepository {
             stmt.setDate(2, java.sql.Date.valueOf(dob));
 
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // If there's a result, a user exists
+                return rs.next();
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to check if user exists", e);

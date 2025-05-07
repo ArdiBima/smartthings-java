@@ -10,7 +10,6 @@ public class Middleware implements Handler {
     @Override
     public void handle(Context ctx) {
         System.out.println("Incoming request: " + ctx.getRequest().getPath());
-        // Wrap the next handlers and catch any exceptions
         ctx.insert((Context innerCtx) -> {
             try {
                 innerCtx.next();
@@ -24,7 +23,7 @@ public class Middleware implements Handler {
     }
 
     private void handleInternalErrorException(Context ctx, Throwable e) {
-        e.printStackTrace(); // Or use a logger
+        e.printStackTrace(); 
         ctx.getResponse().contentType("application/json");
         ctx.getResponse().status(500);
         ctx.render(ratpack.jackson.Jackson.json(Map.of(
@@ -33,7 +32,7 @@ public class Middleware implements Handler {
         )));
     }
     private void handleUnauthorized(Context ctx, Throwable e) {
-        e.printStackTrace(); // Or use a logger
+        e.printStackTrace(); 
         ctx.getResponse().contentType("application/json");
         ctx.getResponse().status(401);
         ctx.render(ratpack.jackson.Jackson.json(Map.of(

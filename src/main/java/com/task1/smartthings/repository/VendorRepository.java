@@ -77,13 +77,9 @@ public class VendorRepository {
             stmt.setString(3, vendorDevices.getDeviceName());
             stmt.setString(4, vendorDevices.getDeviceDescription());
     
-            
-            
-    
-            // Serialize the DeviceConfigJson object to a JSON string
             try {
                 String json = mapper.writeValueAsString(vendorDevices.getDeviceConfigJson());
-                stmt.setString(5, json);  // Set the JSON string as the value for the jsonb column
+                stmt.setString(5, json);  
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Failed to serialize deviceConfigJson", e);
             }
@@ -118,7 +114,7 @@ public class VendorRepository {
         }
         if (update.deviceConfigJson != null) {
             if (update.deviceValue != null) {
-                update.deviceConfigJson.defaultValue = update.deviceValue;  // sync value
+                update.deviceConfigJson.defaultValue = update.deviceValue; 
             }
     
             ObjectMapper mapper = new ObjectMapper();

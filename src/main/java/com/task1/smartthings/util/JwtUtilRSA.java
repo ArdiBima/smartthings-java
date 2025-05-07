@@ -15,7 +15,6 @@ public class JwtUtilRSA {
         try {
             String privateKeyPem = System.getProperty("JWT_PRIVATE_KEY");
             String publicKeyPem = System.getProperty("JWT_PUBLIC_KEY");
-            // System.out.println("Private key PEM: " + privateKeyPem);
             if (privateKeyPem == null || publicKeyPem == null) {
                 throw new IllegalStateException("JWT keys must be set as system properties.");
             }
@@ -26,7 +25,6 @@ public class JwtUtilRSA {
         } catch (Exception e) {
             System.err.println("Error initializing RSA keys:");
             e.printStackTrace();
-            // throw new RuntimeException(e);
         }
     }
 
@@ -34,7 +32,7 @@ public class JwtUtilRSA {
         String key = pemKey
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
-                .replaceAll("\\s", "");  // Remove all whitespace including newlines and spaces
+                .replaceAll("\\s", "");  
         byte[] decoded = Base64.getDecoder().decode(key);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
         return KeyFactory.getInstance("RSA").generatePrivate(spec);
@@ -44,7 +42,7 @@ public class JwtUtilRSA {
         String key = pemKey
                 .replace("-----BEGIN PUBLIC KEY-----", "")
                 .replace("-----END PUBLIC KEY-----", "")
-                .replaceAll("\\s", "");  // Remove all whitespace including newlines and spaces
+                .replaceAll("\\s", "");  
         byte[] decoded = Base64.getDecoder().decode(key);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
         return KeyFactory.getInstance("RSA").generatePublic(spec);

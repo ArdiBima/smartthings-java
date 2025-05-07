@@ -13,11 +13,11 @@ import java.util.List;
 
 public class AdminService {
     private final AdminRepository repository;
-    // init
+
     public AdminService(AdminRepository repository) {
         this.repository = repository;
     }
-    // Business Logic Method
+    
     public List<Device> listDevices() throws SQLException {
         return repository.getAllDevices();
     }

@@ -38,7 +38,7 @@ public class BasicAuthMiddleware implements Handler {
            throw new IllegalArgumentException("Unauthorized: Invalid credentials");
         }
 
-        ctx.next(); // proceed to next handler if auth passes
+        ctx.next(); 
     }
 
     public String getUsername() {

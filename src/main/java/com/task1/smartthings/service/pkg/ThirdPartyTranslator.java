@@ -48,10 +48,9 @@ public class ThirdPartyTranslator {
                 response.append(responseLine.trim());
             }
 
-            // Parse the JSON response
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(response.toString());
-            return rootNode.path("data").path("translation").asText(text); // fallback to original if missing
+            return rootNode.path("data").path("translation").asText(text); 
         }
     }
 }

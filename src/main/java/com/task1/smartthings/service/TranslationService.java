@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class TranslationService {
     public String translateSingleText(String text, String country) {
-        // Rest of your code logic
+        
         String normalizedText = text.toLowerCase();
         String normalizedCountry = country.toLowerCase();
     
@@ -68,7 +68,6 @@ public class TranslationService {
             }
         );
 
-        // translations.add(japan);
         translations.add(germany);
         translations.add(france);
 

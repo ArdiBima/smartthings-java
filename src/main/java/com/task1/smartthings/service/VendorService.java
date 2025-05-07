@@ -12,11 +12,11 @@ import java.util.List;
 
 public class VendorService {
     private final VendorRepository repository;
-    // init
+
     public VendorService(VendorRepository repository) {
         this.repository = repository;
     }
-    // Business Logic Method
+
     public List<VendorDevices> listVendorDevices(Context ctx, int vendorId) throws SQLException {
         return repository.getAllVendorDevices(ctx, vendorId);
     }

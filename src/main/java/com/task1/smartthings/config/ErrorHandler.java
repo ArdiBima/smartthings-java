@@ -22,7 +22,7 @@ public class ErrorHandler implements ServerErrorHandler, ClientErrorHandler {
 
     @Override
     public void error(Context ctx, Throwable throwable) throws Exception {
-        throwable.printStackTrace(); // or use logger
+        throwable.printStackTrace(); 
         ctx.getResponse().status(500);
         ctx.render(json(Map.of(
             "success", false,
