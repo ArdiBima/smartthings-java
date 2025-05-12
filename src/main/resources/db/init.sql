@@ -1,19 +1,19 @@
-create table public.vendors
+create table vendors
 (
     id         serial
         primary key,
     brand_name varchar(100) not null
 );
 
-alter table public.vendors
+alter table vendors
     owner to postgres;
 
-create table public.devices
+create table devices
 (
     id                 serial
         primary key,
     vendor_id          integer
-        references public.vendors,
+        references vendors,
     brand_name         varchar(100),
     device_name        varchar(100),
     device_description text,
@@ -24,10 +24,10 @@ create table public.devices
     deleted_at         timestamp
 );
 
-alter table public.devices
+alter table devices
     owner to postgres;
 
-create table public.users
+create table users
 (
     id         serial
         primary key,
@@ -37,21 +37,24 @@ create table public.users
     country    varchar(50),
     created_at timestamp,
     updated_at timestamp,
-    deleted_at timestamp
+    deleted_at timestamp,
+    email      varchar(255) not null
+        unique,
+    password   varchar(255) not null
 );
 
-alter table public.users
+alter table users
     owner to postgres;
 
-create table public.user_devices
+create table user_devices
 (
     user_id   integer not null
-        references public.users,
+        references users,
     device_id integer not null
-        references public.devices,
+        references devices,
     primary key (user_id, device_id)
 );
 
-alter table public.user_devices
+alter table user_devices
     owner to postgres;
 
