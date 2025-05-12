@@ -65,9 +65,7 @@ public class AdminHandler implements Handler {
             } catch (Exception e) {
                 e.printStackTrace();
                 ctx.getResponse().status(500).send("Error serializing response");
-            }
-        
-        
+            }        
     }
 
     public void getUserDeviceStats(Context ctx) {

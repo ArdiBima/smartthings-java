@@ -48,7 +48,7 @@ public class Router {
                     userChain.post("login", userHandler::login);
                     userChain.all(new JwtMiddleware(jwtUtilRSA));
                     userChain.post("device/bind", userHandler::bindDeviceUser);
-                    userChain.post("device/unbind", userHandler::unbindDeviceUser);
+                    userChain.delete("device/unbind", userHandler::unbindDeviceUser);
                     userChain.post("device/control", userHandler::changeDeviceValue);
                     userChain.get("devices/available", userHandler::getAvlilableDevices);
                     userChain.get("devices/list", userHandler::getUserBindedDevices);
